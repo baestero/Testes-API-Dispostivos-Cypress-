@@ -1,7 +1,3 @@
-Claro! Abaixo está um exemplo de como você pode estruturar um **README.md** para o seu projeto de testes com Cypress:
-
----
-
 # Testes Automatizados com Cypress - API de Dispositivos
 
 Este projeto contém testes automatizados realizados com o framework Cypress para validar o funcionamento de uma API RESTful de gerenciamento de dispositivos. Os testes cobrem operações básicas como listar, buscar, cadastrar, alterar e deletar dispositivos.
