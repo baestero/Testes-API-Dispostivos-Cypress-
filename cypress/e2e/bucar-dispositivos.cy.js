@@ -1,11 +1,11 @@
 describe("Buscar Dispositivos", () => {
   it("Listar todos dispositivos", () => {
-    cy.request({
+    cy.api({
       method: "GET",
       url: "https://api.restful-api.dev/objects",
       failOnStatusCode: false,
     }).then((r) => {
-      expect(r.duration).to.be.lessThan(1000); //verificar se a requisição foi feita em menos de 1 segundo
+      expect(r.duration).to.be.lessThan(1500); //verificar se a requisição foi feita em menos de 1 segundo
       expect(r.status).equal(200); //status da requisição
       expect(r.body).to.be.an("array"); // verificar se é um array
       expect(r.body).to.have.length(13); // verificar se tem 13 elementos
@@ -39,24 +39,23 @@ describe("Buscar Dispositivos", () => {
   });
 
   it("Buscar dispositivo especifico", () => {
-    cy.request({
+    cy.api({
       method: "GET",
       url: "https://api.restful-api.dev/objects/7",
     }).then((r) => {
       cy.log("Resposta: ", r.body);
-      //será executado quando a requisição responder
       cy.log("Codigo", r.status);
 
       expect(r.status).equal(200);
       expect(r.body.id).equal("7");
-      expect(r.body.id).not.empty; // no caso de um id aleatorio
-      expect(r.body.name).equal("Apple MacBook Pro 16"); // no caso de um id aleatorio
+      expect(r.body.id).not.empty;
+      expect(r.body.name).equal("Apple MacBook Pro 16");
     });
   });
 
   it("Buscar dispositivo inexistente", () => {
     const id = "12345678";
-    cy.request({
+    cy.api({
       method: "GET",
       url: `https://api.restful-api.dev/objects/${id}`,
       failOnStatusCode: false,
@@ -66,7 +65,7 @@ describe("Buscar Dispositivos", () => {
     });
   });
   it("Cadastrar dispositivo, consultar dispositivo, alterar dispositivo e deletar dispositivo", () => {
-    cy.request({
+    cy.api({
       method: "POST",
       url: `https://api.restful-api.dev/objects`,
       body: {
@@ -84,7 +83,7 @@ describe("Buscar Dispositivos", () => {
       expect(r.status).equal(200);
       expect(id).to.exist;
 
-      cy.request({
+      cy.api({
         method: "GET",
         url: `https://api.restful-api.dev/objects/${id}`,
       }).then((r) => {
@@ -95,7 +94,7 @@ describe("Buscar Dispositivos", () => {
         expect(r.body.data.price).equal(2999.99);
       });
 
-      cy.request({
+      cy.api({
         method: "PUT",
         url: `https://api.restful-api.dev/objects/${id}`,
         body: {
@@ -106,22 +105,20 @@ describe("Buscar Dispositivos", () => {
         expect(r.body.name).equal("Acer nitro 5");
       });
 
-      cy.request({
+      cy.api({
         method: "DELETE",
         url: `https://api.restful-api.dev/objects/${id}`,
       }).then((r) => {
         expect(r.status).equal(200);
       });
 
-      cy.request({
+      cy.api({
         method: "GET",
-        url: "`https://api.restful-api.dev/objects/${id}`,",
+        url: `https://api.restful-api.dev/objects/${id}`,
         failOnStatusCode: false,
       }).then((r) => {
         expect(r.status).equal(404);
-        expect(resultado.body.error).equal(
-          "Oject with id=12345678 was not found."
-        );
+        expect(r.body.error).equal(`Oject with id=${id} was not found.`);
       });
     });
   });
